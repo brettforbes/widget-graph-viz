@@ -1,4 +1,4 @@
-// graph.js
+// OS Threat graph.js
 //define context menu functions
 window.Widgets.Graph = {};
 
@@ -50,8 +50,7 @@ window.Widgets.Graph = {};
   // key id functions
   ns.getLinkId = function(d, i) {
     console.log(['getLinkId', d, i]);
-    return d.id;
-    // return d.source + '-' + d.target;
+    return d.source.id + '-' + d.target.id;
   };
   ns.getNodeId = function(d, i) {
     console.log(['getNodeId', d, i]);
@@ -275,11 +274,11 @@ window.Widgets.Graph = {};
     options.sforceNode = d3.forceManyBody();
     options.pforceLink = d3
       .forceLink(options.split.promo.edges)
-      .id(ns.getLinkId)
+      .id((d) => d.id)
       .distance(4 * options.icon_size);
     options.sforceLink = d3
       .forceLink(options.split.scratch.edges)
-      .id(ns.getLinkId)
+      .id((d) => d.id)
       .distance(4 * options.icon_size);
     options.sforceCentre = d3.forceCenter(
       options.working_width / 2,
@@ -453,7 +452,7 @@ window.Widgets.Graph = {};
     // for promo
     options.promoNode = options.promo_svg
       .append('g')
-      .selectAll('pnodes')
+      .selectAll('.pnodes')
       .data(options.split.promo.nodes)
       .join('image')
       .attr('class', 'pnodes')
@@ -521,7 +520,7 @@ window.Widgets.Graph = {};
     // for scratch
     options.scratchNode = options.scratch_svg
       .append('g')
-      .selectAll('snodes')
+      .selectAll('.snodes')
       .data(options.split.scratch.nodes)
       .join('image')
       .attr('class', 'snodes')
@@ -589,32 +588,35 @@ window.Widgets.Graph = {};
     options.promotable_sim.on('tick', function() {
         // console.log(['promotable_sim ticked',this, options.promo_svg
         // .selectAll('.plinks')]);
-        options.promo_svg
-          .selectAll('.plinks')
-          .attr('x1', (d) => d.source.vx)
-          .attr('y1', (d) => d.source.vy)
-          .attr('x2', (d) => d.target.vx)
-          .attr('y2', (d) => d.target.vy);
+        // options.promo_svg
+        options.promoEdgepaths
+          // .selectAll('.plinks')
+          .attr('x1', (d) => d.source.x)
+          .attr('y1', (d) => d.source.y)
+          .attr('x2', (d) => d.target.x)
+          .attr('y2', (d) => d.target.y);
   
-        options.promo_svg
-          .selectAll('.pnodes')
-          .attr('x', (d) => d.vx - options.radius / 2)
-          .attr('y', (d) => d.vy - options.radius / 2);
+        // options.promo_svg
+        options.promoNode
+          // .selectAll('.pnodes')
+          .attr('x', (d) => d.x - 6 / 2)
+          .attr('y', (d) => d.y - 6 / 2);
   
-        options.promo_svg.selectAll('.pedgepath').attr(
-          'd',
-          function(d) {
-            //console.log('pedgepath->', d);
-            return (
-              'M ' +
-              d.source.vx +
-              ' ' +
-              d.source.vy +
-              ' L ' +
-              d.target.vx +
-              ' ' +
-              d.target.vy
-            );
+        // options.promo_svg.selectAll('.pedgepath')
+        options.promoEdgepaths
+          .attr('d',
+            function(d) {
+              //console.log('pedgepath->', d);
+              return (
+                'M ' +
+                d.source.x +
+                ' ' +
+                d.source.y +
+                ' L ' +
+                d.target.x +
+                ' ' +
+                d.target.y
+              );
           },
           // (d) =>
           //   'M ' +
@@ -631,33 +633,39 @@ window.Widgets.Graph = {};
 
     // This function is run at each iteration of the force algorithm, updating the nodes position (the nodes data array is directly manipulated).
     
-    function scratchTicked() {
-      options.scratch_svg
-        .selectAll('.slinks')
+    options.scratch_sim.on('tick', function() {
+      // options.scratch_svg
+      //   .selectAll('.slinks')
+      options.scratchLink
+        .attr('d',
+          function(d) {
+            console.log('slinks->', d);})
         .attr('x1', (d) => d.source.x)
         .attr('y1', (d) => d.source.y)
         .attr('x2', (d) => d.target.x)
         .attr('y2', (d) => d.target.y);
 
-      options.scratch_svg
-        .selectAll('.snodes')
+      // options.scratch_svg
+      //   .selectAll('.snodes')
+      options.scratchNode
         .attr('x', (d) => d.x - options.radius / 2)
         .attr('y', (d) => d.y - options.radius / 2);
 
-      options.scratch_svg.selectAll('.sedgepath').attr(
-        'd',
-        function(d) {
-          console.log('sedgepath->', d);
-          return (
-            'M ' +
-            d.source.vx +
-            ' ' +
-            d.source.vy +
-            ' L ' +
-            d.target.vx +
-            ' ' +
-            d.target.vy
-          );
+      // options.scratch_svg.selectAll('.sedgepath')
+      options.scratchEdgepaths
+        .attr('d',
+          function(d) {
+            console.log('sedgepath->', d);
+            return (
+              'M ' +
+              d.source.x +
+              ' ' +
+              d.source.y +
+              ' L ' +
+              d.target.x +
+              ' ' +
+              d.target.y
+            );
         },
         // (d) =>
         //   'M ' +
@@ -669,7 +677,7 @@ window.Widgets.Graph = {};
         //   ' ' +
         //   d.target.y,
       );
-    }
+    });
 
     //create zoom handler  for each
     let pZoom_handler = d3.zoom().on('zoom', function(options) { pzoom_actions(options) });
@@ -705,14 +713,14 @@ window.Widgets.Graph = {};
     //the targeted node is released when the gesture ends
     function pDragended(d) {
       if (!d3.event.active)
-        ns.promotable_sim.alphaTarget(0);
+        options.promotable_sim.alphaTarget(0);
       d.fx = null;
       d.fy = null;
     }
 
     function sDragstarted(d) {
       if (!d3.event.active)
-        ns.scratch_sim.alphaTarget(0.3).restart(); //sets the current target alpha to the specified number in the range [0,1].
+        options.scratch_sim.alphaTarget(0.3).restart(); //sets the current target alpha to the specified number in the range [0,1].
       d.fy = d.y; //fx - the node’s fixed x-position. Original is null.
       d.fx = d.x; //fy - the node’s fixed y-position. Original is null.
     }
@@ -725,7 +733,8 @@ window.Widgets.Graph = {};
 
     //the targeted node is released when the gesture ends
     function sDragended(d) {
-      if (!d3.event.active) ns.scratch_sim.alphaTarget(0);
+      if (!d3.event.active) 
+        options.scratch_sim.alphaTarget(0);
       d.fx = null;
       d.fy = null;
     }
