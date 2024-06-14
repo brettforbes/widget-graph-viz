@@ -260,97 +260,7 @@ window.Widgets.Graph = {};
     return options;
   };
 
-  ns.simGraph = function(data, options) {
-    console.group('simGraph');
-    console.log('Simulating Graph');
-    // console.log('inputOptions->', inputOptions);
-    // let options = Object.assign({}, inputOptions);
-    console.log('options->', options);
-    options.steps.push('simGraph');
-    console.log('options.split.scratch->', options.split.promo.edges);
-    // Step 6. Setup the simulations
-    // first the variables centreStrength
-    options.pforceNode = d3.forceManyBody();
-    options.sforceNode = d3.forceManyBody();
-    options.pforceLink = d3
-      .forceLink(options.split.promo.edges)
-      .id((d) => d.id)
-      .distance(4 * options.icon_size);
-    options.sforceLink = d3
-      .forceLink(options.split.scratch.edges)
-      .id((d) => d.id)
-      .distance(4 * options.icon_size);
-    options.sforceCentre = d3.forceCenter(
-      options.working_width / 2,
-      options.svg_height / 4,
-    );
-    options.pforceCentre = d3.forceCenter(
-      options.working_width / 2,
-      options.svg_height / 4,
-    );
-    if (options.nodeStrength !== undefined)
-      options.pforceNode.strength(options.nodeStrength);
-    if (options.nodeStrength !== undefined)
-      options.sforceNode.strength(options.nodeStrength);
-    if (options.linkStrength !== undefined)
-      options.pforceLink.strength(options.linkStrength);
-    if (options.linkStrength !== undefined)
-      options.sforceLink.strength(options.linkStrength);
-    if (options.centreStrength !== undefined)
-      options.sforceCentre.strength(options.centreStrength);
-    if (options.centreStrength !== undefined)
-      options.pforceCentre.strength(options.centreStrength);
-
-    console.log(
-      'options.split.promo.nodes',
-      options.split.promo.nodes,
-    );
-    console.log(
-      'options.split.promo.edges',
-      options.split.promo.edges,
-    );
-    console.log(
-      'options.split.scratch.nodes',
-      options.split.scratch.nodes,
-    );
-    console.log(
-      'options.split.scratch.edges',
-      options.split.scratch.edges,
-    );
-
-    options.promotable_sim = d3
-      .forceSimulation()
-      .nodes(options.split.promo.nodes)
-    //   .on('end', function() {
-    //     console.log(["promotable_sim",this]);
-    //         this.force('link',   options.pforceLink)
-    //         .force('charge',   options.pforceNode)  
-    //         .force('center',   options.pforceCentre);
-    //   });
-      .force('link', options.pforceLink)
-      .force('charge', options.pforceNode)
-      .force('center', options.pforceCentre);
-
-    options.scratch_sim = d3
-      .forceSimulation()
-      .nodes(options.split.scratch.nodes)
-    //   .on('end', function() {
-    //     console.log(this);
-    //     console.log(["scratch_sim",this]);
-    //     this.force('link', options.sforceLink)
-    //         .force('charge', options.sforceNode)
-    //         .force('center', options.sforceCentre);
-    //   });
-      .force('link', options.sforceLink)
-      .force('charge', options.sforceNode)
-      .force('center', options.sforceCentre);
-
-    // 7. Now show split graphs
-    console.groupEnd();
-    return options;
-  };
-
-  // 7. Show Graph
+  // Step 3. Show Graph
   ns.showGraphs = function(options) {
     console.group('showGraphs');
     console.log('Showing the Graph');
@@ -585,100 +495,7 @@ window.Widgets.Graph = {};
     //     .on('end', sDragended), //end - after an active pointer becomes inactive (on mouseup, touchend or touchcancel).
     // );
 
-    options.promotable_sim.on('tick', function() {
-        // console.log(['promotable_sim ticked',this, options.promo_svg
-        // .selectAll('.plinks')]);
-        // options.promo_svg
-        options.promoEdgepaths
-          // .selectAll('.plinks')
-          .attr('x1', (d) => d.source.x)
-          .attr('y1', (d) => d.source.y)
-          .attr('x2', (d) => d.target.x)
-          .attr('y2', (d) => d.target.y);
-  
-        // options.promo_svg
-        options.promoNode
-          // .selectAll('.pnodes')
-          .attr('x', (d) => d.x - 6 / 2)
-          .attr('y', (d) => d.y - 6 / 2);
-  
-        // options.promo_svg.selectAll('.pedgepath')
-        options.promoEdgepaths
-          .attr('d',
-            function(d) {
-              //console.log('pedgepath->', d);
-              return (
-                'M ' +
-                d.source.x +
-                ' ' +
-                d.source.y +
-                ' L ' +
-                d.target.x +
-                ' ' +
-                d.target.y
-              );
-          },
-          // (d) =>
-          //   'M ' +
-          //   d.source.x +
-          //   ' ' +
-          //   d.source.y +
-          //   ' L ' +
-          //   d.target.x +
-          //   ' ' +
-          //   d.target.y,
-        );
-      }); //use simulation.on to listen for tick events as the simulation runs.
-    // ns.scratch_sim.on('tick', scratchTicked); //use simulation.on to listen for tick events as the simulation runs.
-
-    // This function is run at each iteration of the force algorithm, updating the nodes position (the nodes data array is directly manipulated).
     
-    options.scratch_sim.on('tick', function() {
-      // options.scratch_svg
-      //   .selectAll('.slinks')
-      options.scratchLink
-        .attr('d',
-          function(d) {
-            console.log('slinks->', d);})
-        .attr('x1', (d) => d.source.x)
-        .attr('y1', (d) => d.source.y)
-        .attr('x2', (d) => d.target.x)
-        .attr('y2', (d) => d.target.y);
-
-      // options.scratch_svg
-      //   .selectAll('.snodes')
-      options.scratchNode
-        .attr('x', (d) => d.x - options.radius / 2)
-        .attr('y', (d) => d.y - options.radius / 2);
-
-      // options.scratch_svg.selectAll('.sedgepath')
-      options.scratchEdgepaths
-        .attr('d',
-          function(d) {
-            console.log('sedgepath->', d);
-            return (
-              'M ' +
-              d.source.x +
-              ' ' +
-              d.source.y +
-              ' L ' +
-              d.target.x +
-              ' ' +
-              d.target.y
-            );
-        },
-        // (d) =>
-        //   'M ' +
-        //   d.source.x +
-        //   ' ' +
-        //   d.source.y +
-        //   ' L ' +
-        //   d.target.x +
-        //   ' ' +
-        //   d.target.y,
-      );
-    });
-
     //create zoom handler  for each
     let pZoom_handler = d3.zoom().on('zoom', function(options) { pzoom_actions(options) });
     let sZoom_handler = d3.zoom().on('zoom', function(options) { szoom_actions(options) });
@@ -738,6 +555,190 @@ window.Widgets.Graph = {};
       d.fx = null;
       d.fy = null;
     }
+    console.groupEnd();
+    return options;
+  };
+
+  
+  // Step 4: Simulate Graph
+  ns.simGraph = function(data, options) {
+    console.group('simGraph');
+    console.log('Simulating Graph');
+    // console.log('inputOptions->', inputOptions);
+    // let options = Object.assign({}, inputOptions);
+    console.log('options->', options);
+    options.steps.push('simGraph');
+    console.log('options.split.scratch->', options.split.promo.edges);
+    // Step 6. Setup the simulations
+    // first the variables centreStrength
+    options.pforceNode = d3.forceManyBody();
+    options.sforceNode = d3.forceManyBody();
+    options.pforceLink = d3
+      .forceLink(options.split.promo.edges)
+      .id((d) => d.id)
+      .distance(4 * options.icon_size);
+    options.sforceLink = d3
+      .forceLink(options.split.scratch.edges)
+      .id((d) => d.id)
+      .distance(4 * options.icon_size);
+    options.sforceCentre = d3.forceCenter(
+      options.working_width / 2,
+      options.svg_height / 4,
+    );
+    options.pforceCentre = d3.forceCenter(
+      options.working_width / 2,
+      options.svg_height / 4,
+    );
+    if (options.nodeStrength !== undefined)
+      options.pforceNode.strength(options.nodeStrength);
+    if (options.nodeStrength !== undefined)
+      options.sforceNode.strength(options.nodeStrength);
+    if (options.linkStrength !== undefined)
+      options.pforceLink.strength(options.linkStrength);
+    if (options.linkStrength !== undefined)
+      options.sforceLink.strength(options.linkStrength);
+    if (options.centreStrength !== undefined)
+      options.sforceCentre.strength(options.centreStrength);
+    if (options.centreStrength !== undefined)
+      options.pforceCentre.strength(options.centreStrength);
+
+    console.log(
+      'options.split.promo.nodes',
+      options.split.promo.nodes,
+    );
+    console.log(
+      'options.split.promo.edges',
+      options.split.promo.edges,
+    );
+    console.log(
+      'options.split.scratch.nodes',
+      options.split.scratch.nodes,
+    );
+    console.log(
+      'options.split.scratch.edges',
+      options.split.scratch.edges,
+    );
+// 
+
+    options.promotable_sim = d3
+      .forceSimulation(browserNs.ow(options.$object_form), browserNs.oh(options.$object_form))
+      .nodes(options.split.promo.nodes)
+    //   .on('end', function() {
+    //     console.log(["promotable_sim",this]);
+    //         this.force('link',   options.pforceLink)
+    //         .force('charge',   options.pforceNode)  
+    //         .force('center',   options.pforceCentre);
+    //   });
+      .force('link', options.pforceLink)
+      .force('charge', options.pforceNode)
+      .force('center', options.pforceCentre)
+      .on('tick', function() {
+        // console.log(['promotable_sim ticked',this, options.promo_svg
+        // .selectAll('.plinks')]);
+        // options.promo_svg
+        options.promoLink
+          // .selectAll('.plinks')
+          .attr('x1', (d) => d.source.x)
+          .attr('y1', (d) => d.source.y)
+          .attr('x2', (d) => d.target.x)
+          .attr('y2', (d) => d.target.y);
+  
+        // options.promo_svg
+        options.promoNode
+          // .selectAll('.pnodes')
+          .attr('x', (d) => d.x - 6 / 2)
+          .attr('y', (d) => d.y - 6 / 2);
+  
+        // options.promo_svg.selectAll('.pedgepath')
+        options.promoEdgepaths
+          .attr('d',
+            function(d) {
+              //console.log('pedgepath->', d);
+              return (
+                'M ' +
+                d.source.x +
+                ' ' +
+                d.source.y +
+                ' L ' +
+                d.target.x +
+                ' ' +
+                d.target.y
+              );
+          },
+          // (d) =>
+          //   'M ' +
+          //   d.source.x +
+          //   ' ' +
+          //   d.source.y +
+          //   ' L ' +
+          //   d.target.x +
+          //   ' ' +
+          //   d.target.y,
+        );
+      }); //use simulation.on to listen for tick events as the simulation runs.
+
+      
+      
+    options.scratch_sim = d3
+      .forceSimulation(browserNs.ow(options.$working_svg) ,browserNs.oh(options.$working_svg))
+      .nodes(options.split.scratch.nodes)
+    //   .on('end', function() {
+    //     console.log(this);
+    //     console.log(["scratch_sim",this]);
+    //     this.force('link', options.sforceLink)
+    //         .force('charge', options.sforceNode)
+    //         .force('center', options.sforceCentre);
+    //   });
+      .force('link', options.sforceLink)
+      .force('charge', options.sforceNode)
+      .force('center', options.sforceCentre)
+      .on('tick', function() {
+        // options.scratch_svg
+        //   .selectAll('.slinks')
+        options.scratchLink
+          // .attr('d',
+          //   function(d) {
+              // console.log('slinks->', d);})
+          .attr('x1', (d) => d.source.x)
+          .attr('y1', (d) => d.source.y)
+          .attr('x2', (d) => d.target.x)
+          .attr('y2', (d) => d.target.y);
+  
+        // options.scratch_svg
+        //   .selectAll('.snodes')
+        options.scratchNode
+          .attr('x', (d) => d.x - options.radius / 2)
+          .attr('y', (d) => d.y - options.radius / 2);
+  
+        // options.scratch_svg.selectAll('.sedgepath')
+        options.scratchEdgepaths
+          .attr('d',
+            function(d) {
+              // console.log('sedgepath->', d);
+              return (
+                'M ' +
+                d.source.x +
+                ' ' +
+                d.source.y +
+                ' L ' +
+                d.target.x +
+                ' ' +
+                d.target.y
+              );
+          },
+          // (d) =>
+          //   'M ' +
+          //   d.source.x +
+          //   ' ' +
+          //   d.source.y +
+          //   ' L ' +
+          //   d.target.x +
+          //   ' ' +
+          //   d.target.y,
+        );
+      });
+
+    // 7. Now show split graphs
     console.groupEnd();
     return options;
   };

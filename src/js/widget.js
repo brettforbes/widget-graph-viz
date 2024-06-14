@@ -167,17 +167,18 @@ window.Widgets.Widget = {};
             console.log(componentConfig.steps);
             console.log(componentConfig);
 
-            //Step 3 - D3 simulate graph
-            let step3Options = graphNs.simGraph(
-                    data,
-                    componentConfig,
-            );
+            //Step 3 - D3 draw
+            let step3Options = graphNs.showGraphs(componentConfig);
+            
 
             console.log(componentConfig.steps);
 
-            //Step 4 - D3 draw
-            let step4Options =
-            graphNs.showGraphs(componentConfig);
+            //Step 4 - D3 simulate graph
+            let step4Options = graphNs.simGraph(
+                data,
+                componentConfig,
+        );
+            
 
             console.log(componentConfig.steps);
 
