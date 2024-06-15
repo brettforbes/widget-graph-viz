@@ -646,7 +646,11 @@ window.Widgets.Graph = {};
         // options.promo_svg
         options.promoNode
           // .selectAll('.pnodes')
-          .attr('x', (d) => d.x - 6 / 2)
+          // .attr('x', (d) => d.x - 6 / 2)
+          .attr('x', function(d) { 
+            console.log('promoNode->', d)
+            return d.x - 6 / 2;
+          })
           .attr('y', (d) => d.y - 6 / 2);
   
         // options.promo_svg.selectAll('.pedgepath')
@@ -678,7 +682,7 @@ window.Widgets.Graph = {};
       }); //use simulation.on to listen for tick events as the simulation runs.
 
       
-      
+
     options.scratch_sim = d3
       .forceSimulation(browserNs.ow(options.$working_svg) ,browserNs.oh(options.$working_svg))
       .nodes(options.split.scratch.nodes)
