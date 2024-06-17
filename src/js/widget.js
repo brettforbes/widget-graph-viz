@@ -46,7 +46,7 @@ window.Widgets.Widget = {};
         prefix:
         'https://raw.githubusercontent.com/os-threat/images/main/img/',
         shape: 'rect-',
-        icon_size: 36,
+        icon_size: 30,
         textPadding: 8,
         corner: 5,
         // the tree view
@@ -55,7 +55,7 @@ window.Widgets.Widget = {};
         height: "100%",
         lineSpacing: 50,
         indentSpacing: 50,
-        itemFont: '18px',
+        itemFont: '14px',
         boxSize: 10,
         tree_edge_thickness: 0.75,
         graph_edge_thickness: 1,
@@ -64,27 +64,45 @@ window.Widgets.Widget = {};
         centreStrength: 80,
         theme: 'light',
         light_theme: {
-        treeFill: 'white',
-        scratchFill: 'ivory',
-        promoFill: 'blanchedalmond',
-        svgName: 'black',
-        svgBorder: 'black',
-        checkColour: 'gray',
-        checkText: 'white',
-        select: 'yellow',
-        edges: 'black',
+            treeFill: 'white',
+            scratchFill: 'ivory',
+            promoFill: 'blanchedalmond',
+            svgName: 'black',
+            svgBorder: 'black',
+            checkColour: 'gray',
+            checkText: 'white',
+            select: 'black',
+            edges: 'black',
+            tooltip: {
+                fill: 'white', 
+                stroke: '1px', 
+                scolour: 'black', 
+                corner: 5, 
+                tcolour: 'black', 
+                tsize: '11px', 
+                padding: '5px'
+                },
         },
         dark_theme: {
-        treeFill: 'gray',
-        scratchFill: 'dimgray',
-        promoFill: 'gray',
-        svgName: 'white',
-        svgBorder: 'white',
-        checkColour: 'white',
-        checkText: 'gray',
-        select: 'yellow',
-        edges: 'white',
-        },
+            treeFill: 'gray',
+            scratchFill: 'dimgray',
+            promoFill: 'gray',
+            svgName: 'white',
+            svgBorder: 'white',
+            checkColour: 'white',
+            checkText: 'gray',
+            select: 'white',
+            edges: 'white',
+            tooltip: {
+                fill: 'lightgray', 
+                stroke: '1px', 
+                scolour: 'white', 
+                corner: 5, 
+                tcolour: 'white', 
+                tsize: '11px', 
+                padding: '10px'
+                },
+            },
     };
 
         
@@ -123,11 +141,12 @@ window.Widgets.Widget = {};
         
         // 2. Setup 2 SVG and Border combos
         let index_svg = d3
-            .select('#index_svg')
+            .select('#index_panel')
             .append('svg')
             .attr('class', 'index_svg')
             .attr('width', options.width)
             .attr('height', options.height)
+            .attr('class', 'index_svg')
             .append('g')
             .attr(
             'transform',

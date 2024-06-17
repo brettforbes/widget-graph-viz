@@ -77,16 +77,16 @@ window.Widgets.Graph = {};
 
     options.steps = ["initSVG"];
 
-    options.$object_form = $component.find('#object_form');
-    options.$working_svg = $component.find('#working_svg');
+    options.$object_form = $component.find('#promo_panel');
+    options.$working_svg = $component.find('#scratch_panel');
     //
     // Step 1: Setup the 3 svg's and the tooltip
-    options.promotable_svg = d3.select('#object_form')
+    options.promotable_svg = d3.select('#promo_panel')
       .append('svg')
       .attr('width', browserNs.ow(options.$object_form) )
       .attr('height', browserNs.oh(options.$object_form))
       .attr('class', 'promotable_svg');
-    options.scratch_svg = d3.select('#working_svg')
+    options.scratch_svg = d3.select('#scratch_panel')
       .append('svg')
       .attr('width', browserNs.ow(options.$working_svg) )
       .attr('height', browserNs.oh(options.$working_svg))
@@ -94,7 +94,16 @@ window.Widgets.Graph = {};
     options.tooltip = d3
       .select('body')
       .append('div')
-      .attr('class', 'tooltip')
+      .style("z-index", "10")
+      .attr('class', 'workingTooltip')
+      .style('display', 'block')
+      .style("position", "absolute")
+      .style("background-color", options.theme.tooltip.fill)
+      .style("border", "solid")
+      .style("border-width",  options.theme.tooltip.stroke)
+      .style("border-color",  options.theme.tooltip.scolour)
+      .style("border-radius",  options.theme.tooltip.corner)
+      .style("padding",  options.theme.tooltip.padding)
       .style('opacity', 0);
 
     // Step 2: Setup the 3 rectangles
@@ -363,7 +372,7 @@ window.Widgets.Graph = {};
     options.promoNode = options.promo_svg
       .append('g')
       .selectAll('.pnodes')
-      .data(options.split.promo.nodes)
+      .data(options.split.promo.nodes, (d) => d.id)
       .join('image')
       .attr('class', 'pnodes')
       .attr('xlink:href', function(d) {
@@ -431,7 +440,7 @@ window.Widgets.Graph = {};
     options.scratchNode = options.scratch_svg
       .append('g')
       .selectAll('.snodes')
-      .data(options.split.scratch.nodes)
+      .data(options.split.scratch.nodes, (d) => d.id)
       .join('image')
       .attr('class', 'snodes')
       .attr('xlink:href', function(d) {
@@ -575,7 +584,10 @@ window.Widgets.Graph = {};
     options.sforceNode = d3.forceManyBody();
     options.pforceLink = d3
       .forceLink(options.split.promo.edges)
-      .id((d) => d.id)
+      .id(function (d) {
+        console.log('pforceLink->', d);
+        return d.id
+      }) // (d) => d.data.id
       .distance(4 * options.icon_size);
     options.sforceLink = d3
       .forceLink(options.split.scratch.edges)
@@ -648,7 +660,7 @@ window.Widgets.Graph = {};
           // .selectAll('.pnodes')
           // .attr('x', (d) => d.x - 6 / 2)
           .attr('x', function(d) { 
-            console.log('promoNode->', d)
+            // console.log('promoNode->', d)
             return d.x - 6 / 2;
           })
           .attr('y', (d) => d.y - 6 / 2);

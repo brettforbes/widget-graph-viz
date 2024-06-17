@@ -13,6 +13,61 @@ window.Widgets.IndentTree = {};
     } else {
       theme = options.dark_theme;
     }
+    // tooltip
+    let indentTooltip = d3.select("body")
+        .append("div")
+          .attr('class', 'indentTooltip')
+          .style('display', 'block')
+          .style("position", "absolute")
+          .style("z-index", "10")
+          .style("background-color", theme.tooltip.fill)
+          .style("border", "solid")
+          .style("border-width",  theme.tooltip.stroke)
+          .style("border-color",  theme.tooltip.scolour)
+          .style("border-radius",  theme.tooltip.corner)
+          .style("padding",  theme.tooltip.padding)
+          .style('opacity', 0);
+
+    // Function that assembles the HTML tooltip string
+    let htmltooltip = function (d) {
+      console.log('d->',d);
+      // setup tooltip paragraph style
+      let pgraph_style = '<p style="font-size:' + toString(theme.tooltip.tsize) + '">';
+        pgraph_style += '<font color="' + theme.tooltip.tcolour +'">';
+      // initilaise description string with  paragraph style
+      let desc_string = pgraph_style;
+      // add heading
+      desc_string += '<b>' + d.data.heading + '</b>' + '<br>';
+      // add description
+      desc_string += d.data.description;
+
+      return desc_string;
+    }  
+
+     // Three function that change the tooltip when user hover / move / leave a cell
+     let mouseover = function(d) {
+      indentTooltip
+        .transition()
+        .duration(options.duration)
+        .style("opacity", 1)
+      d3.select(this)
+        .style("stroke", theme.select)
+        .style("opacity", 1)
+    }
+    let mousemove = function(event, d) {
+      indentTooltip
+        .html(htmltooltip(d))
+        .style("left", (event.pageX+70) + "px")
+        .style("top", (event.pageY) + "px")
+    }
+    let mouseleave = function(d) {
+      indentTooltip
+        .style("opacity", 0)
+      d3.select(this)
+        .style("stroke", "none")
+        .style("opacity", 0.8)
+    }
+
     // settings
   
     let plus = {
@@ -49,9 +104,9 @@ window.Widgets.IndentTree = {};
     }); // counts original number of items
   
     //resonsive size before icons had height =  Math.max(minHeight, index * lineSpacing + marginTop + marginBottom )
-    var svg = tree_svg;
+    let svg = tree_svg;
   
-    var tree_rect = svg
+    let tree_rect = svg
       .append('rect')
       .attr('class', 'index_rect')
       .attr('width', options.index_width)
@@ -211,10 +266,10 @@ window.Widgets.IndentTree = {};
       // attach icon
       let image = nodeEnter
         .append('image')
-        .attr('x', 10 + options.boxSize / 2)
+        .attr('x', 8 + options.boxSize / 2)
         .attr(
           'y',
-          -options.icon_size / 2 - options.boxSize / 2,
+          -options.icon_size / 2, // - options.boxSize / 2,
         )
         .attr('xlink:href', function (d) {
           console.log('d->', d);
@@ -238,18 +293,21 @@ window.Widgets.IndentTree = {};
           );
         })
         .attr('width', function (d) {
-          return options.icon_size + 5;
+          return options.icon_size;
         })
         .attr('height', function (d) {
-          return options.icon_size + 5;
-        });
+          return options.icon_size;
+        })
+        .on('mouseover.tooltip', mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseout.tooltip", mouseleave);
   
       // label text
       let label = nodeEnter
         .append('text')
         .attr(
           'x',
-          options.icon_size + 30 + options.boxSize / 2,
+          options.icon_size + 14 + options.boxSize / 2,
         )
         .attr('text-anchor', 'start')
         .style('font-size', options.itemFont)
