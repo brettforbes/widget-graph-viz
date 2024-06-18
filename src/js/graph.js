@@ -77,19 +77,19 @@ window.Widgets.Graph = {};
 
     options.steps = ["initSVG"];
 
-    options.$object_form = $component.find('#promo_panel');
-    options.$working_svg = $component.find('#scratch_panel');
+    options.$promo_panel = $component.find('#promo_panel');
+    options.$scratch_panel = $component.find('#scratch_panel');
     //
     // Step 1: Setup the 3 svg's and the tooltip
     options.promotable_svg = d3.select('#promo_panel')
       .append('svg')
-      .attr('width', browserNs.ow(options.$object_form) )
-      .attr('height', browserNs.oh(options.$object_form))
+      .attr('width', browserNs.ow(options.$promo_panel) )
+      .attr('height', browserNs.oh(options.$promo_panel))
       .attr('class', 'promotable_svg');
     options.scratch_svg = d3.select('#scratch_panel')
       .append('svg')
-      .attr('width', browserNs.ow(options.$working_svg) )
-      .attr('height', browserNs.oh(options.$working_svg))
+      .attr('width', browserNs.ow(options.$scratch_panel) )
+      .attr('height', browserNs.oh(options.$scratch_panel))
       .attr('class', 'scratch_svg');
     options.tooltip = d3
       .select('body')
@@ -585,7 +585,7 @@ window.Widgets.Graph = {};
     options.pforceLink = d3
       .forceLink(options.split.promo.edges)
       .id(function (d) {
-        console.log('pforceLink->', d);
+        // console.log('pforceLink->', d);
         return d.id
       }) // (d) => d.data.id
       .distance(4 * options.icon_size);

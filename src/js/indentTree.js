@@ -4,7 +4,7 @@ window.Widgets.IndentTree = {};
 
 (function ($, ns, d3, document, window) {
   
-  ns.indentTree = function(data, tree_svg, options = {}) {
+  ns.indentTree = function(data, contextMenuNs, tree_svg, options = {}) {
     
     // WARNING: x and y are switched because the d3.tree is vertical rather than the default horizontal
     var theme = {};
@@ -50,7 +50,7 @@ window.Widgets.IndentTree = {};
 
     // Function that assembles the HTML tooltip string
     let htmltooltip = function (d) {
-      console.log('d->',d);
+      // console.log('d->',d);
       // setup tooltip paragraph style
       let pgraph_style = '<p style="font-size:' + toString(theme.tooltip.tsize) + '">';
         pgraph_style += '<font color="' + theme.tooltip.tcolour +'">';
@@ -322,7 +322,7 @@ window.Widgets.IndentTree = {};
         .on("mousemove", mousemove)
         .on("mouseout.tooltip", mouseleave)
         .on('contextmenu', (d) => {
-          window.Widgets.contextMenuNs.createContextMenu(d, treeMenuItems, '.index_svg');
+          contextMenuNs.createContextMenu(d, treeMenuItems, '.index_svg');
         });
   
       // label text

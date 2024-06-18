@@ -142,7 +142,7 @@ window.Widgets.Widget = {};
         d3.json('data/sightingIndex.json').then(function (data) {
             console.log(data);
             console.log('I am rendering first time');
-            indentTreeNs.indentTree(data, index_svg, options);
+            indentTreeNs.indentTree(data, contextMenuNs, index_svg, options);
         });
 
         d3.json(ns.scratch).then(function (data) {
@@ -204,7 +204,7 @@ window.Widgets.Widget = {};
                 console.group("d3.json.then");
                 console.log(data);
                 console.log('I am ready to re-render the tree');
-                indentTreeNs.indentTree(data, index_svg, ns.options);
+                indentTreeNs.indentTree(data, contextMenuNs, index_svg, ns.options);
                 console.groupEnd();
             });
             console.groupEnd();
