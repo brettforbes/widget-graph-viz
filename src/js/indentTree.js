@@ -50,12 +50,15 @@ window.Widgets.IndentTree = {};
 
     // Function that assembles the HTML tooltip string
     let htmltooltip = function (d) {
-      // console.log('d->',d);
-      // setup tooltip paragraph style
+      // console.log('d->',d);tooltip paragraph style
       let pgraph_style = '<p style="font-size:' + toString(theme.tooltip.tsize) + '">';
-        pgraph_style += '<font color="' + theme.tooltip.tcolour +'">';
+      pgraph_style += '<font color="' + theme.tooltip.tcolour +'">';
       // initilaise description string with  paragraph style
       let desc_string = pgraph_style;
+      if (options.tooltipContent == 'json') {
+        return d.data;
+      }
+      // setup 
       // add heading
       desc_string += '<b>' + d.data.heading + '</b>' + '<br>';
       // add description

@@ -37,6 +37,7 @@ window.Widgets.Widget = {};
         height: "100%",
         lineSpacing: 50,
         indentSpacing: 50,
+        tooltipContent: 'json',
         itemFont: '14px',
         boxSize: 10,
         tree_edge_thickness: 0.75,
