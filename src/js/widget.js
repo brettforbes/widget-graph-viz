@@ -10,24 +10,6 @@ window.Widgets.Widget = {};
 
 
     // 1. Instantiate Visualisation Variables
-    // 3. Setup RMB Menu Items
-    ns.menuItems = [
-        {
-        title: 'Copy Object',
-        action: (d) => {
-            // TODO: add any action you want to perform
-            console.log('Copy Object', d);
-        },
-        },
-        {
-        title: 'Create Relationship',
-        action: (d) => {
-            // TODO: add any action you want to perform
-            console.log('Create Relationship ->', d);
-        },
-        },
-    ];
-
     ns.options = {
         duration: 350,
         radius: 6, // radius of curve for links
@@ -146,7 +128,6 @@ window.Widgets.Widget = {};
             .attr('class', 'index_svg')
             .attr('width', options.width)
             .attr('height', options.height)
-            .attr('class', 'index_svg')
             .append('g')
             .attr(
             'transform',

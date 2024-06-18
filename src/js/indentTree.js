@@ -13,6 +13,26 @@ window.Widgets.IndentTree = {};
     } else {
       theme = options.dark_theme;
     }
+    //menu items
+    
+    // 3. Setup RMB Menu Items
+    let treeMenuItems = [
+      {
+      title: 'Copy Object',
+      action: (d) => {
+          // TODO: add any action you want to perform
+          console.log('Tree Copy Object', d);
+      },
+      },
+      {
+      title: 'Create Relationship',
+      action: (d) => {
+          // TODO: add any action you want to perform
+          console.log('Tree Create Relationship ->', d);
+      },
+      },
+  ];
+
     // tooltip
     let indentTooltip = d3.select("body")
         .append("div")
@@ -300,7 +320,10 @@ window.Widgets.IndentTree = {};
         })
         .on('mouseover.tooltip', mouseover)
         .on("mousemove", mousemove)
-        .on("mouseout.tooltip", mouseleave);
+        .on("mouseout.tooltip", mouseleave)
+        .on('contextmenu', (d) => {
+          window.Widgets.contextMenuNs.createContextMenu(d, treeMenuItems, '.index_svg');
+        });
   
       // label text
       let label = nodeEnter
