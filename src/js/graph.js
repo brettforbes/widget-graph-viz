@@ -109,16 +109,16 @@ window.Widgets.Graph = {};
     // Step 2: Setup the 3 rectangles
     options.promotable_rect = options.promotable_svg
       .append('rect')
-      .attr('width', browserNs.ow(options.$object_form) )
-      .attr('height', browserNs.oh(options.$object_form))
+      .attr('width', browserNs.ow(options.$promo_panel) )
+      .attr('height', browserNs.oh(options.$promo_panel))
       .attr('x', 0)
       .attr('y', 0)
       .attr('stroke', options.theme.svgBorder)
       .attr('fill', options.theme.promoFill);
     options.scratch_rect = options.scratch_svg
       .append('rect')
-      .attr('width', browserNs.ow(options.$working_svg) )
-      .attr('height', browserNs.oh(options.$working_svg))
+      .attr('width', browserNs.ow(options.$scratch_panel) )
+      .attr('height', browserNs.oh(options.$scratch_panel))
       .attr('x', 0)
       .attr('y', 0)
       .attr('stroke', options.theme.svgBorder)
@@ -633,7 +633,7 @@ window.Widgets.Graph = {};
 // 
 
     options.promotable_sim = d3
-      .forceSimulation(browserNs.ow(options.$object_form), browserNs.oh(options.$object_form))
+      .forceSimulation(browserNs.ow(options.$promo_panel), browserNs.oh(options.$promo_panel))
       .nodes(options.split.promo.nodes)
     //   .on('end', function() {
     //     console.log(["promotable_sim",this]);
@@ -696,7 +696,7 @@ window.Widgets.Graph = {};
       
 
     options.scratch_sim = d3
-      .forceSimulation(browserNs.ow(options.$working_svg) ,browserNs.oh(options.$working_svg))
+      .forceSimulation(browserNs.ow(options.$scratch_panel) ,browserNs.oh(options.$scratch_panel))
       .nodes(options.split.scratch.nodes)
     //   .on('end', function() {
     //     console.log(this);

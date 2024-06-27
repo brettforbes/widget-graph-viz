@@ -4,29 +4,31 @@ window.Widgets.IndentTree = {};
 
 (function ($, ns, d3, document, window) {
   
-  ns.indentTree = function(data, contextMenuNs, tree_svg, options = {}) {
+  ns.indentTree = function(data, contextMenu, tree_svg, options = {}) {
 
     // setup helper function to prettify json for the tooltip
+    // https://stackoverflow.com/questions/4810841/pretty-print-json-using-javascript
     function syntaxHighlight(json) {
       if (typeof json != 'string') {
-           json = JSON.stringify(json, undefined, 2);
+           json = JSON.stringify(json, undefined, "<br/>");
       }
-      json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-          var cls = 'number';
-          if (/^"/.test(match)) {
-              if (/:$/.test(match)) {
-                  cls = 'key';
-              } else {
-                  cls = 'string';
-              }
-          } else if (/true|false/.test(match)) {
-              cls = 'boolean';
-          } else if (/null/.test(match)) {
-              cls = 'null';
-          }
-          return '<span class="' + cls + '">' + match + '</span>';
-      });
+      // json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return json
+      // .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g, function (match) {
+      //     var cls = 'number';
+      //     if (/^"/.test(match)) {
+      //         if (/:$/.test(match)) {
+      //             cls = 'key';
+      //         } else {
+      //             cls = 'string';
+      //         }
+      //     } else if (/true|false/.test(match)) {
+      //         cls = 'boolean';
+      //     } else if (/null/.test(match)) {
+      //         cls = 'null';
+      //     }
+      //     return '<span class="' + cls + '">' + match + '</span>';
+      // });
   }
     
     // WARNING: x and y are switched because the d3.tree is vertical rather than the default horizontal
@@ -79,7 +81,7 @@ window.Widgets.IndentTree = {};
       // initilaise description string with  paragraph style
       let desc_string = pgraph_style;
       if (options.tooltipContent == 'json') {
-        return desc_string += syntaxHighlight(d.data);        
+        return desc_string += syntaxHighlight(d.data.original);        
       }
       // setup 
       // add heading
@@ -348,7 +350,7 @@ window.Widgets.IndentTree = {};
         .on("mousemove", mousemove)
         .on("mouseout.tooltip", mouseleave)
         .on('contextmenu', (d) => {
-          contextMenuNs.createContextMenu(d, treeMenuItems, '.index_svg');
+          contextMenu.createContextMenu(d, treeMenuItems, '.index_svg');
         });
   
       // label text

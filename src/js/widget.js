@@ -92,6 +92,10 @@ window.Widgets.Widget = {};
     // 4. Setup initial tree view
 
     // 5. Setup treeview change dataslice radio buttons
+        
+    // 4. Setup initial tree view
+
+    // 5. Setup treeview change dataslice radio buttons
 
     // // 6. Load the Working Pane with scratch data
     // const scratch = 'data/scratch.json';
@@ -124,7 +128,7 @@ window.Widgets.Widget = {};
         
         // 2. Setup 2 SVG and Border combos
         let index_svg = d3
-            .select('#index_panel')
+            .select('#index_svg')
             .append('svg')
             .attr('class', 'index_svg')
             .attr('width', options.width)
@@ -168,18 +172,17 @@ window.Widgets.Widget = {};
             console.log(componentConfig.steps);
             console.log(componentConfig);
 
-            //Step 3 - D3 draw
-            let step3Options = graphNs.showGraphs(componentConfig);
-            
+            //Step 3 - D3 simulate graph
+            let step3Options = graphNs.simGraph(
+                    data,
+                    componentConfig,
+            );
 
             console.log(componentConfig.steps);
 
-            //Step 4 - D3 simulate graph
-            let step4Options = graphNs.simGraph(
-                data,
-                componentConfig,
-        );
-            
+            //Step 4 - D3 draw
+            let step4Options =
+            graphNs.showGraphs(componentConfig);
 
             console.log(componentConfig.steps);
 
