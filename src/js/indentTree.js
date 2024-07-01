@@ -5,6 +5,10 @@ window.Widgets.IndentTree = {};
 (function ($, ns, d3, document, window) {
   
   ns.indentTree = function(data, contextMenu, tree_svg, options = {}) {
+    console.group('indentTree');
+    console.log("inside indent tree ========================================");
+    console.log(data, contextMenu, tree_svg, options);
+
 
     // setup helper function to prettify json for the tooltip
     // https://stackoverflow.com/questions/4810841/pretty-print-json-using-javascript
@@ -183,6 +187,8 @@ window.Widgets.IndentTree = {};
   
     let indexLast;
     function update(source) {
+      console.log("into update ===================");
+      console.log(source);
       const nodes = root.descendants().reverse();
       const links = root.links();
   
@@ -459,6 +465,7 @@ window.Widgets.IndentTree = {};
   
     update(root);
   
+    console.groupEnd();
     return svg.node();
   }
   
